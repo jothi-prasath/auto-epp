@@ -43,7 +43,6 @@ def set_governor():
         try:
             with open(epp_file_path, 'w') as file:
                 file.write("powersave")
-                return True
         except:
             exit(1)
 
@@ -54,7 +53,6 @@ def set_epp(epp_value):
         try:
             with open(epp_file_path, 'w') as file:
                 file.write(epp_value)
-                return True
         except:
             exit(1)
             
