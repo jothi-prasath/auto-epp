@@ -3,9 +3,14 @@
 import psutil
 import os
 import time
+import configparser
 
-epp_state_for_AC="balance_power"
-epp_state_for_BAT="power"
+CONFIG_FILE = "/etc/auto-epp.conf"
+DEFAULT_CONFIG = """# see available epp state by running: cat /sys/devices/system/cpu/cpu0/cpufreq/energy_performance_available_preferences
+[Settings]
+epp_state_for_AC=balance_performance
+epp_state_for_BAT=power
+"""
 
 def check_root():
     if os.geteuid() == 0:
@@ -13,6 +18,16 @@ def check_root():
     else:                                        
         print("auto-epp must be run with root privileges.")
         exit(1)
+
+def read_config():
+    if not os.path.exists(CONFIG_FILE):
+        with open(CONFIG_FILE, 'w') as file:
+            file.write(DEFAULT_CONFIG)
+    config = configparser.ConfigParser()
+    config.read(CONFIG_FILE)
+    epp_state_for_AC = config.get("Settings", "epp_state_for_AC")
+    epp_state_for_BAT = config.get("Settings", "epp_state_for_BAT")
+    return epp_state_for_AC, epp_state_for_BAT
 
 def get_battery_state():
     battery = psutil.sensors_battery()
@@ -45,6 +60,7 @@ def set_epp(epp_value):
             
 def main():
     check_root()
+    epp_state_for_AC, epp_state_for_BAT = read_config()
     while True:
         set_governor()
         if get_battery_state() == "AC":

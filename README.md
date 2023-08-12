@@ -48,3 +48,8 @@ To restart the service
 ```bash
 sudo systemctl restart auto-epp
 ```
+
+Edit the config file
+```bash
+sudo nano /etc/auto-epp.conf
+```
