@@ -6,7 +6,8 @@
 
 - [Requirements](#requirements)
 - [Enable amd-pstate-epp](#to-enable-amd-pstate-epp)
-- [Installation](#installation)
+- [Quick Install](#quick-install)
+- [Manual Install](#manual-install)
 - [Usage](#usage)
 
 ## Requirements
@@ -28,7 +29,14 @@ sudo nano /etc/default/grub
 GRUB_CMDLINE_LINUX_DEFAULT="quiet splash amd_pstate=active"
 ```
 
-## Installation
+## Quick Install
+
+To quickly install auto-epp, just copy and paste this to your terminal (if you have curl installed):
+```bash
+sudo bash -c "curl https://raw.githubusercontent.com/jothi-prasath/auto-epp/master/quick-install.sh | bash"
+```
+
+## Manual Install
 
 ```bash
 git clone https://github.com/jothi-prasath/auto-epp
