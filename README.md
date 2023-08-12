@@ -1,7 +1,5 @@
 # auto-epp
 
-## Introduction
-
 **auto-epp** is a python script that manages the energy performance preferences (EPP) of your AMD CPU using the AMD-Pstate driver. It adjusts the EPP settings based on whether your system is running on AC power or battery power, helping optimize power consumption and performance.
 
 ## Index
