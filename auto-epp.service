@@ -1,0 +1,12 @@
+[Unit]
+Description=auto-epp - Automatic amd-pstate epp
+After=network.target network-online.target
+
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/bin/auto-epp
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

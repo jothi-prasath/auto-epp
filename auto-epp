@@ -1,0 +1,57 @@
+#!/bin/python3
+
+import psutil
+import os
+import time
+
+epp_state_for_AC="balance_power"
+epp_state_for_BAT="power"
+
+def check_root():
+    if os.geteuid() == 0:
+        return
+    else:                                        
+        print("auto-epp must be run with root privileges.")
+        exit(1)
+
+def get_battery_state():
+    battery = psutil.sensors_battery()
+    if battery.power_plugged:
+        return "AC"
+    else:
+        return "Battery"
+
+def set_governor():
+    cpu_count = os.cpu_count()
+    for cpu in range(cpu_count):
+        epp_file_path = f'/sys/devices/system/cpu/cpu{cpu}/cpufreq/scaling_governor'
+        try:
+            with open(epp_file_path, 'w') as file:
+                file.write("powersave")
+                return True
+        except:
+            exit(1)
+
+def set_epp(epp_value):
+    cpu_count = os.cpu_count()
+    for cpu in range(cpu_count):
+        epp_file_path = f'/sys/devices/system/cpu/cpu{cpu}/cpufreq/energy_performance_preference'
+        try:
+            with open(epp_file_path, 'w') as file:
+                file.write(epp_value)
+                return True
+        except:
+            exit(1)
+            
+def main():
+    check_root()
+    while True:
+        set_governor()
+        if get_battery_state() == "AC":
+            set_epp(epp_state_for_AC)
+        else:
+            set_epp(epp_state_for_BAT)
+        time.sleep(2)
+
+if __name__ == "__main__":
+    main()
