@@ -39,9 +39,9 @@ def get_battery_state():
 def set_governor():
     cpu_count = os.cpu_count()
     for cpu in range(cpu_count):
-        epp_file_path = f'/sys/devices/system/cpu/cpu{cpu}/cpufreq/scaling_governor'
+        governor_file_path = f'/sys/devices/system/cpu/cpu{cpu}/cpufreq/scaling_governor'
         try:
-            with open(epp_file_path, 'w') as file:
+            with open(governor_file_path, 'w') as file:
                 file.write("powersave")
         except:
             exit(1)
