@@ -33,7 +33,7 @@ GRUB_CMDLINE_LINUX_DEFAULT="quiet splash amd_pstate=active"
 
 To quickly install auto-epp, just copy and paste this to your terminal (if you have curl installed):
 ```bash
-sudo bash -c "curl https://raw.githubusercontent.com/jothi-prasath/auto-epp/master/quick-install.sh | bash"
+curl https://raw.githubusercontent.com/jothi-prasath/auto-epp/master/quick-install.sh | sudo bash
 ```
 
 ## Manual Install

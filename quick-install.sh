@@ -41,7 +41,7 @@ fi
 cd auto-epp
 
 # Installing
-if sudo ./install.sh; then
+if sudo bash ./install.sh; then
     echo "Installation completed successfully!"
 else
     echo "Installation failed."
