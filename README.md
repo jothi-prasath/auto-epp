@@ -1,4 +1,5 @@
 # auto-epp
+[![auto-epp](https://img.shields.io/aur/version/auto-epp?color=1793d1&label=auto-epp&logo=arch-linux&style=for-the-badge)](https://aur.archlinux.org/packages/auto-epp/)
 
 **auto-epp** is a python script that manages the energy performance preferences (EPP) of your AMD CPU using the AMD-Pstate driver. It adjusts the EPP settings based on whether your system is running on AC power or battery power, helping optimize power consumption and performance.
 
