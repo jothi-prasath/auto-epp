@@ -8,6 +8,7 @@
 - [Requirements](#requirements)
 - [Enable amd-pstate-epp](#to-enable-amd-pstate-epp)
 - [Quick Install](#quick-install)
+  - [For Archlinux](#for-arch-linux)
 - [Manual Install](#manual-install)
 - [Usage](#usage)
 
@@ -34,6 +35,12 @@ GRUB_CMDLINE_LINUX_DEFAULT="quiet splash amd_pstate=active"
 To quickly install auto-epp, just copy and paste this to your terminal (if you have curl installed):
 ```bash
 curl https://raw.githubusercontent.com/jothi-prasath/auto-epp/master/quick-install.sh | sudo bash
+```
+### For Arch Linux
+
+On Arch Linux, and Arch-based distributions, auto-epp can be found in the AUR. Install with an AUR helper like yay:
+```bash
+yay auto-epp
 ```
 
 ## Manual Install
