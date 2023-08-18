@@ -1,6 +1,5 @@
 #!/bin/python3
 
-import psutil
 import os
 import time
 import configparser
@@ -29,12 +28,49 @@ def read_config():
     epp_state_for_BAT = config.get("Settings", "epp_state_for_BAT")
     return epp_state_for_AC, epp_state_for_BAT
 
-def get_battery_state():
-    battery = psutil.sensors_battery()
-    if battery.power_plugged:
-        return "AC"
+def charging():
+    power_supply_path = "/sys/class/power_supply/"
+    power_supplies = os.listdir(power_supply_path)
+    # sort it so AC is 'always' first
+    power_supplies = sorted(power_supplies)
+    if len(power_supplies) == 0:
+        return True
     else:
-        return "Battery"
+        for supply in power_supplies:
+            try:
+                with open(power_supply_path + supply + "/type") as f:
+                    supply_type = f.read()[:-1]
+                    if supply_type == "Mains":
+                        # we found an AC
+                        try:
+                            with open(power_supply_path + supply + "/online") as f:
+                                val = int(f.read()[:-1])
+                                if val == 1:
+                                    # we are definitely charging
+                                    return True
+                        except FileNotFoundError:
+                            # we could not find online, check next item
+                            continue
+                    elif supply_type == "Battery":
+                        # we found a battery, check if its being discharged
+                        try:
+                            with open(power_supply_path + supply + "/status") as f:
+                                val = str(f.read()[:-1])
+                                if val == "Discharging":
+                                    # we found a discharging battery
+                                    return False
+                        except FileNotFoundError:
+                            # could not find status, check the next item
+                            continue
+                    else:
+                        # continue to next item because current is not
+                        # "Mains" or "Battery"
+                        continue
+            except FileNotFoundError:
+                # could not find type, check the next item
+                continue
+    # we cannot determine discharging state, assume we are on powercable
+    return True
 
 def set_governor():
     cpu_count = os.cpu_count()
@@ -61,7 +97,7 @@ def main():
     epp_state_for_AC, epp_state_for_BAT = read_config()
     while True:
         set_governor()
-        if get_battery_state() == "AC":
+        if charging():
             set_epp(epp_state_for_AC)
         else:
             set_epp(epp_state_for_BAT)
