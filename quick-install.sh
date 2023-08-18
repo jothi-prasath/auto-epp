@@ -15,13 +15,13 @@ fi
 # Install dependencies based on the package manager available
 echo "Installing missing dependencies"
 if command -v apt &>/dev/null; then
-    apt install -y git python3 python3-psutil
+    apt install -y git python3
 elif command -v pacman &>/dev/null; then
-    pacman -Syu --noconfirm --needed git python python-psutil
+    pacman -Syu --noconfirm --needed git python
 elif command -v dnf &>/dev/null; then
-    dnf install -y git python3 python3-psutil
+    dnf install -y git python3
 elif command -v zypper &>/dev/null; then
-    zypper install -y git python3 python3-psutil
+    zypper install -y git python3
 else
     echo "Unsupported package manager. Please install the required dependencies manually."
     exit 1

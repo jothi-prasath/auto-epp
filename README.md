@@ -14,7 +14,6 @@
 
 - AMD CPU with the AMD-Pstate-EPP driver enabled.
 - Python 3.x
-- psutil library(install using your package manager)
 
 ## To enable amd-pstate-epp
 
