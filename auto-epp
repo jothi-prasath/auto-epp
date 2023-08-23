@@ -18,6 +18,19 @@ def check_root():
         print("auto-epp must be run with root privileges.")
         exit(1)
 
+def check_driver():
+    scaling_driver_path = "/sys/devices/system/cpu/cpu0/cpufreq/scaling_driver"
+    try:
+        with open(scaling_driver_path) as f:
+            scaling_driver = f.read()[:-1]
+    except:
+        scaling_driver = None
+    if scaling_driver == "amd-pstate-epp":
+        return
+    else:
+        print("The system not runing amd-pstate-epp")
+        exit(1)
+
 def read_config():
     if not os.path.exists(CONFIG_FILE):
         with open(CONFIG_FILE, 'w') as file:
@@ -94,6 +107,7 @@ def set_epp(epp_value):
             
 def main():
     check_root()
+    check_driver()
     epp_state_for_AC, epp_state_for_BAT = read_config()
     while True:
         set_governor()
