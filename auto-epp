@@ -37,9 +37,12 @@ def read_config():
             file.write(DEFAULT_CONFIG)
     config = configparser.ConfigParser()
     config.read(CONFIG_FILE)
-    epp_state_for_AC = config.get("Settings", "epp_state_for_AC")
-    epp_state_for_BAT = config.get("Settings", "epp_state_for_BAT")
-    return epp_state_for_AC, epp_state_for_BAT
+    return dict(
+        epp_state_for_AC=config.get("Settings", "epp_state_for_AC"),
+        epp_state_for_BAT=config.get("Settings", "epp_state_for_BAT"),
+        governor_state_for_AC=config.get("Settings", "governor_state_for_AC"),
+        governor_state_for_BAT=config.get("Settings", "governor_state_for_BAT"),
+    )
 
 def charging():
     power_supply_path = "/sys/class/power_supply/"
@@ -85,13 +88,13 @@ def charging():
     # we cannot determine discharging state, assume we are on powercable
     return True
 
-def set_governor():
+def set_governor(governor_value):
     cpu_count = os.cpu_count()
     for cpu in range(cpu_count):
         governor_file_path = f'/sys/devices/system/cpu/cpu{cpu}/cpufreq/scaling_governor'
         try:
             with open(governor_file_path, 'w') as file:
-                file.write("powersave")
+                file.write(governor_value)
         except:
             exit(1)
 
@@ -108,13 +111,14 @@ def set_epp(epp_value):
 def main():
     check_root()
     check_driver()
-    epp_state_for_AC, epp_state_for_BAT = read_config()
+    config = read_config()
     while True:
-        set_governor()
         if charging():
-            set_epp(epp_state_for_AC)
+            set_governor(config.get('governor_state_for_AC', 'performance'))
+            set_epp(config.get('epp_state_for_AC', 'balance_performance'))
         else:
-            set_epp(epp_state_for_BAT)
+            set_governor(config.get('governor_state_for_BAT', 'powersave'))
+            set_epp(config.get('epp_state_for_BAT', 'power'))
         time.sleep(2)
 
 if __name__ == "__main__":
