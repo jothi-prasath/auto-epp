@@ -2,6 +2,7 @@
 
 import os
 import time
+import sys
 import configparser
 
 CONFIG_FILE = "/etc/auto-epp.conf"
@@ -16,6 +17,7 @@ def check_root():
         return
     else:                                        
         print("auto-epp must be run with root privileges.")
+        sys.stdout.flush()
         exit(1)
 
 def check_driver():
@@ -29,6 +31,7 @@ def check_driver():
         return
     else:
         print("The system not runing amd-pstate-epp")
+        sys.stdout.flush()
         exit(1)
 
 def read_config():
@@ -86,14 +89,23 @@ def charging():
     return True
 
 def set_governor():
-    cpu_count = os.cpu_count()
-    for cpu in range(cpu_count):
-        governor_file_path = f'/sys/devices/system/cpu/cpu{cpu}/cpufreq/scaling_governor'
-        try:
-            with open(governor_file_path, 'w') as file:
-                file.write("powersave")
-        except:
-            exit(1)
+    get_governor_file_path = '/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor'
+    try:
+        # get current governor
+        with open(get_governor_file_path) as gov_file:
+            cur_governor = gov_file.read()[:-1]
+            if cur_governor != "powersave":
+                print(f'Current governor "{cur_governor}" is not "powersave". Setting governor to "powersave"')
+                sys.stdout.flush()
+
+                # setting governor to powersave
+                cpu_count = os.cpu_count()
+                for cpu in range(cpu_count):
+                    governor_file_path = f'/sys/devices/system/cpu/cpu{cpu}/cpufreq/scaling_governor'
+                    with open(governor_file_path, 'w') as file:
+                        file.write("powersave")
+    except:
+        exit(1)
 
 def set_epp(epp_value):
     cpu_count = os.cpu_count()
