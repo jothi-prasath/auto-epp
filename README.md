@@ -45,7 +45,7 @@ yay auto-epp
 
 ### For NixOS
 
-On NixOS (unstable for now) an option can be enabled to install and set up auto-epp.
+On NixOS (unstable for now) an option can be enabled to install and enable auto-epp.
 
 To enable with the default configuration:
 
