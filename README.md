@@ -43,6 +43,18 @@ On Arch Linux, and Arch-based distributions, auto-epp can be found in the AUR. I
 yay auto-epp
 ```
 
+### For NixOS
+
+On NixOS (unstable for now) an option can be enabled to install and set up auto-epp.
+
+To enable with the default configuration:
+
+```nix
+services.auto-epp.enable = true;
+```
+
+Detailed options available on [nixos.org](https://search.nixos.org/options?channel=unstable&from=0&size=50&sort=relevance&type=packages&query=auto-epp)
+
 ## Manual Install
 
 ```bash
